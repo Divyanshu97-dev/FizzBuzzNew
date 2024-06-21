@@ -1,74 +1,126 @@
-using FizzBuzzExcercise.Repository;
-using Moq;
-using static FizzBuzzExcercise.Models.FizzBuzzEntity;
 using NUnit.Framework;
-using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System.Collections.Generic;
+using FizzBuzzExcercise.Repository;
 
-namespace UnitTestFizzBuzz
+[TestFixture]
+public class DivisionServiceTests
 {
-    [TestFixture]
-    public class DivisionServiceTests
+    private IDivisionService _divisionService;
+    private Mock<IDivisionService> _mockDivisionService;
+
+    [SetUp]
+    public void Setup()
     {
-        private Mock<IDivisionService> _mockDivisionService;
-        private DivisionService _divisionService;
-
-        [SetUp]
-        public void Setup()
-        {
-            _mockDivisionService = new Mock<IDivisionService>();
-            _divisionService = new DivisionService();
-        }
-
-        [Test]
-        public void GetDivisionResult_InputIsMultipleOf3_ReturnsFizz()
-        {
-            // Arrange
-            int input = 6; // Multiple of 3
-
-            // Act
-            var result = _divisionService.GetDivisionResult(input);
-
-            // Assert
-            Assert.That(DivisionResult.Fizz,Is.EqualTo(result));
-        }
-        [Test]
-        public void GetDivisionResult_InputIsMultipleOf5_ReturnsBuzz()
-        {
-            // Arrange
-            int input = 10; // Multiple of 5
-
-            // Act
-            var result = _divisionService.GetDivisionResult(input);
-
-            // Assert
-            Assert.That(DivisionResult.Buzz, Is.EqualTo(result));
-        }
-        [Test]
-        public void GetDivisionResult_InputIsMultipleOf3and5_ReturnsFizzBuzz()
-        {
-            // Arrange
-            int input = 15; // Multiple of 3 and 5
-
-            // Act
-            var result = _divisionService.GetDivisionResult(input);
-
-            // Assert
-            Assert.That(DivisionResult.FizzBuzz, Is.EqualTo(result));
-        }
-        [Test]
-        public void GetDivisionResult_InputIs23_ReturnsValue()
-        {
-            // Arrange
-            int input = 23;
-
-            // Act
-            var result = _divisionService.GetDivisionResult(input);
-
-            // Assert
-            Assert.That(DivisionResult.Value, Is.EqualTo(result));
-        }
-
-
+        _divisionService = new DivisionService();
+        _mockDivisionService = new Mock<IDivisionService>();
     }
 
+
+
+    [Test]
+    public void Test_ProcessList_With_EmptyInput()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "" };
+        string expectedresult = "Invalid item";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+
+        Assert.That(expectedresult, Is.EqualTo( result[0]));
+    }
+
+    [Test]
+    public void Test_ProcessList_With_NonNumericString()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "A" };
+        string expectedresult = "Invalid item";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+
+        Assert.That(expectedresult, Is.EqualTo(result[0]));
+    }
+
+    [Test]
+    public void Test_ProcessList_With_3()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "3" };
+        string expectedresult = "Fizz";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+        
+        Assert.That(expectedresult, Is.EqualTo(result[0]));
+    }
+
+    [Test]
+    public void Test_ProcessList_With_5()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "5" };
+        string expectedresult = "Buzz";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+      
+        Assert.That(expectedresult, Is.EqualTo(result[0]));
+    }
+
+    [Test]
+    public void Test_ProcessList_With_MultipleOf3And5()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "15","30" };
+        string expectedresult = "FizzBuzz";
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+        
+        Assert.That(expectedresult, Is.EqualTo(result[0]));
+        Assert.That(expectedresult, Is.EqualTo(result[1]));
+    }
+
+    [Test]
+    public void Test_ProcessList_With_NumberNotDivisibleBy23()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "23" };
+        string expectedresult = "23/3 = 7 and 23/5 = 4";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+        
+        Assert.That(expectedresult,Is.EqualTo( result[0]));
+        
+    }
+    [Test]
+    public void Test_ProcessList_With_NumberNotDivisibleBy1()
+    {
+        // Arrange
+        List<string> inputList = new List<string> { "1" };
+        string expectedresult = "1/3 = 0 and 1/5 = 0";
+
+        // Act
+        List<string> result = _divisionService.GetDivisionResult(inputList);
+
+        // Assert
+        
+        Assert.That(expectedresult, Is.EqualTo(result[0]));
+
+    }
 }

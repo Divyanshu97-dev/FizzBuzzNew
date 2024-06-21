@@ -1,8 +1,8 @@
-﻿using FizzBuzzExcercise.Models;
+﻿
 using FizzBuzzExcercise.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using static FizzBuzzExcercise.Models.FizzBuzzEntity;
+
 
 namespace FizzBuzzExcercise.Controllers
 {
@@ -17,28 +17,12 @@ namespace FizzBuzzExcercise.Controllers
             _divisionService = divisionService;
         }
 
-        [HttpPost("ProcessArray")]
-        public ActionResult<List<DivisionData>> ProcessArray(int[] values)
+        [HttpPost]
+        public ActionResult ProcessFizzBuzz(List<string> values)
         {
-            if (values == null || values.Length == 0)
-                return BadRequest("Invalid Item");
-
-            var results = new List<DivisionData>();
-            foreach (var value in values)
-            {
-                var divisionResult = _divisionService.GetDivisionResult(value);
-                var logs = _divisionService.GetDivisionLogs();
-
-                var divisionInfo = new DivisionData
-                {
-                    Input = value,
-                    Results = logs
-                };
-
-                results.Add(divisionInfo);
-            }
-
-            return Ok(results);
+             var result = _divisionService.GetDivisionResult(values);
+            
+             return Ok(result);
         }
 
     }
